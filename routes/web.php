@@ -4,6 +4,7 @@ use App\Http\Controllers\ProjectController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\SolicitationController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -54,3 +55,13 @@ Route::get('/dashboard', function () {
     // Se não estiver autenticado, redirecionar para o login
     return redirect('/login')->withErrors(['message' => 'Você precisa estar logado para acessar esta página.']);
 })->middleware('auth')->name('dashboard');
+
+
+// Rotas para solicitações
+Route::middleware(['auth'])->group(function () {
+    Route::get('/solicitacoes', [SolicitationController::class, 'index'])->name('solicitations.index');
+
+    // Outras rotas para criar e aprovar solicitações
+    Route::post('/solicitacoes', [SolicitationController::class, 'store'])->name('solicitations.store');
+    Route::post('/solicitacoes/{solicitation}/aprovar', [SolicitationController::class, 'approve'])->name('solicitations.approve');
+});
