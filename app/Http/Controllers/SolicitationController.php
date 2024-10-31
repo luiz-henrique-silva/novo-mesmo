@@ -9,6 +9,16 @@ use App\Models\Solicitation;
 
 class SolicitationController extends Controller
 {
+
+public function showPendingProjects()
+{
+    // Buscando todos os projetos pendentes
+    $projects = Project::where('status', 'pendente')->get();
+
+    // Retornando a view com a variável $projects
+    return view('projects.approve', compact('projects'));
+}
+
     // Exibir todas as solicitações pendentes
     public function index() {
         $solicitations = Solicitation::all(); // ou adicionar filtros conforme necessário
@@ -51,6 +61,6 @@ class SolicitationController extends Controller
     public function approve(Solicitation $solicitation) {
         // Lógica para mover para a tabela de projetos, semelhante ao que foi discutido antes
     }
-
+    
     // Outros métodos conforme necessário...
 }

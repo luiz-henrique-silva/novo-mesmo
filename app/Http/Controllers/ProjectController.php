@@ -8,6 +8,17 @@ use App\Models\Solicitation; // Certifique-se de importar o modelo Solicitation
 
 class ProjectController extends Controller
 {
+    
+
+public function showPendingProjects()
+{
+    // Buscando todos os projetos pendentes
+    $projects = Project::where('status', 'pendente')->get();
+
+    // Retornando a view com a variável $projects
+    return view('projects.approve', compact('projects'));
+}
+
     // Exibir todos os projetos aprovados
     public function index() {
         $projects = Project::where('status', 'aprovado')->get();
@@ -57,9 +68,11 @@ class ProjectController extends Controller
     
     // Exibir solicitações de projetos pendentes (somente para professores)
     public function approveIndex() {
-        $solicitations = Solicitation::where('status', 'pendente')->get();
-        return view('projects.approve', compact('solicitations'));
+        $projects = Project::where('status', 'pendente')->get();
+        return view('projects.approve', compact('projects'));
     }
+    
+    
 
     // Aprovar projeto (somente para professores)
     public function approve(Solicitation $solicitation) {
@@ -78,4 +91,5 @@ class ProjectController extends Controller
 
         return redirect()->route('dashboard')->with('success', 'Projeto aprovado e movido com sucesso!');
     }
+    
 }

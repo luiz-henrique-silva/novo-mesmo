@@ -19,9 +19,9 @@ return new class extends Migration
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
-            $table->enum('type', ['professor', 'aluno'])->default('aluno');
-
+            $table->enum('type', ['professor', 'aluno'])->default('aluno'); // Incluindo o campo aqui
         });
+        
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();

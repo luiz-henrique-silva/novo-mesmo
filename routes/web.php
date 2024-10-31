@@ -6,25 +6,19 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\SolicitationController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Rota inicial
+Route::get('/', [ProjectController::class, 'welcome'])->name('welcome');
 
 // Rota para a tela de registro
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 
 // Rota para processar o registro
 Route::post('/register', [RegisterController::class, 'register']);
-Route::get('/', [ProjectController::class, 'welcome']);
-
 
 // Rota para a página de login
-
-
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-
 
 // Rotas para alunos e professores
 Route::middleware(['auth'])->group(function () {
@@ -42,7 +36,8 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/projetos/{project}/aprovar', [ProjectController::class, 'approve'])->name('projects.approveProject');
     });
 });
-;
+
+// Rota do dashboard
 Route::get('/dashboard', function () {
     if (auth()->check()) {
         if (auth()->user()->type === 'aluno') {
@@ -56,7 +51,6 @@ Route::get('/dashboard', function () {
     return redirect('/login')->withErrors(['message' => 'Você precisa estar logado para acessar esta página.']);
 })->middleware('auth')->name('dashboard');
 
-
 // Rotas para solicitações
 Route::middleware(['auth'])->group(function () {
     Route::get('/solicitacoes', [SolicitationController::class, 'index'])->name('solicitations.index');
@@ -65,3 +59,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/solicitacoes', [SolicitationController::class, 'store'])->name('solicitations.store');
     Route::post('/solicitacoes/{solicitation}/aprovar', [SolicitationController::class, 'approve'])->name('solicitations.approve');
 });
+
+// Rota para visualizar projetos pendentes
+Route::get('/projects/pending', [ProjectController::class, 'showPendingProjects'])->name('projects.pending');
